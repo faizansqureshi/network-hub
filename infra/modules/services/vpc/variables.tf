@@ -14,6 +14,12 @@ variable "cidr_block" {
   default     = "10.0.0.0/16"
 }
 
+variable "secondary_cidr_block" {
+  description = "Optional secondary IPv4 CIDR block to associate with the VPC."
+  type        = string
+  default     = null
+}
+
 variable "enable_dns_support" {
   description = "Should the VPC have DNS support enabled?"
   type        = bool
@@ -34,26 +40,30 @@ variable "tags" {
 
 variable "subnets" {
   description = <<EOF
-List of subnets to create.
+Map of subnets to create where each key is the subnet name.
 Each subnet object must include:
-- name: unique key used for resources and outputs
 - cidr: subnet CIDR block
 - availability_zone: the AZ to create the subnet in
 - type: one of "public", "private", "isolated"
 - map_public_ip_on_launch: whether to map public IPs on launch
 EOF
-  type = list(object({
-    name                  = string
-    cidr                  = string
+  type = map(object({
+    cidr                  = string 
     availability_zone     = string
     type                  = string
     map_public_ip_on_launch = bool
   }))
-  default = []
+  default = {}
 }
 
 variable "enable_nat_gateway" {
   description = "Whether to create NAT Gateways for private subnet internet access. Creates one NAT gateway per public subnet."
+  type        = bool
+  default     = true
+}
+
+variable "enable_internet_gateway" {
+  description = "Whether to create and attach an Internet Gateway to the VPC."
   type        = bool
   default     = true
 }
@@ -97,54 +107,52 @@ EOF
   default = {}
 }
 
-variable "security_groups" {
+variable "network_acls" {
   description = <<EOF
-Security groups to create in this VPC.
-Each security group object must include:
-- name
-- description
-- ingress (list of rules)
-- egress (list of rules)
+Optional network ACLs to create and associate with subnets.
+Each entry is a map key used as the resource key, and the value must include:
+- name: friendly name for the network ACL
+- subnet_names: list of subnet names (from `var.subnets`) to associate with this ACL
+- ingress: list of ingress rules
+- egress: list of egress rules
 
 Rule schema:
-- from_port
-- to_port
-- protocol
-- cidr_blocks (optional)
-- ipv6_cidr_blocks (optional)
-- security_groups (optional)
-- prefix_list_ids (optional)
-- self (optional)
+- rule_number (required)
+- protocol (required)
+- rule_action (required, "allow" or "deny")
+- cidr_block (optional)
+- ipv6_cidr_block (optional)
+- from_port (optional)
+- to_port (optional)
+- icmp_type (optional)
+- icmp_code (optional)
 EOF
-  type = list(object({
-    name        = string
-    description = string
-    tags        = optional(map(string), {})
-    ingress = optional(list(object({
-      from_port        = number
-      to_port          = number
-      protocol         = string
-      cidr_blocks      = optional(list(string), [])
-      ipv6_cidr_blocks = optional(list(string), [])
-      security_groups  = optional(list(string), [])
-      prefix_list_ids  = optional(list(string), [])
-      self             = optional(bool, false)
-    })), [])
-    egress = optional(list(object({
-      from_port        = number
-      to_port          = number
-      protocol         = string
-      cidr_blocks      = optional(list(string), [])
-      ipv6_cidr_blocks = optional(list(string), [])
-      security_groups  = optional(list(string), [])
-      prefix_list_ids  = optional(list(string), [])
-      self             = optional(bool, false)
-    })), [{
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-    }])
+  type = map(object({
+    name         = string
+    subnet_names = list(string)
+    ingress = list(object({
+      rule_number     = number
+      protocol        = string
+      rule_action     = string
+      cidr_block      = optional(string)
+      ipv6_cidr_block = optional(string)
+      from_port       = optional(number)
+      to_port         = optional(number)
+      icmp_type       = optional(number)
+      icmp_code       = optional(number)
+    }))
+    egress = list(object({
+      rule_number     = number
+      protocol        = string
+      rule_action     = string
+      cidr_block      = optional(string)
+      ipv6_cidr_block = optional(string)
+      from_port       = optional(number)
+      to_port         = optional(number)
+      icmp_type       = optional(number)
+      icmp_code       = optional(number)
+    }))
   }))
-  default = []
+  default = {}
 }
+

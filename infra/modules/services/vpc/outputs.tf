@@ -3,9 +3,14 @@ output "vpc_id" {
   value       = aws_vpc.this.id
 }
 
+output "secondary_cidr_association_id" {
+  description = "ID of the secondary CIDR association, if configured."
+  value       = try(aws_vpc_ipv4_cidr_block_association.secondary[0].id, null)
+}
+
 output "internet_gateway_id" {
   description = "ID of the created Internet Gateway."
-  value       = aws_internet_gateway.this.id
+  value       = try(aws_internet_gateway.this[0].id, null)
 }
 
 output "subnet_ids" {
@@ -37,7 +42,8 @@ output "route_table_ids" {
   )
 }
 
-output "security_group_ids" {
-  description = "Map of security group name -> security group id."
-  value       = { for k, v in aws_security_group.this : k => v.id }
+output "network_acl_ids" {
+  description = "Map of network ACL key -> network ACL id."
+  value       = { for k, v in aws_network_acl.this : k => v.id }
 }
+
