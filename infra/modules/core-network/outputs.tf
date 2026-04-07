@@ -3,15 +3,6 @@ output "vpc_id" {
   value       = module.vpc.vpc_id
 }
 
-output "internet_gateway_id" {
-  description = "ID of the Internet Gateway."
-  value       = module.internet_gateway.internet_gateway_id
-}
-
-output "nat_gateway_ids" {
-  description = "Map of NAT Gateway IDs by availability zone."
-  value       = module.nat_gateways.nat_gateway_ids
-}
 
 output "subnet_ids" {
   description = "Map of all subnet names to their IDs."
@@ -46,7 +37,3 @@ output "tgw_subnet_ids" {
   }
 }
 
-output "route_table_ids" {
-  description = "Map of route table types to their IDs."
-  value       = module.route_tables.route_table_ids
-}

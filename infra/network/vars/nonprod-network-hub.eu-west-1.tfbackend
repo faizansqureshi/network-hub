@@ -1,0 +1,5 @@
+    bucket         = "fq-network-terraform-state-bucket"
+    key            = "network/eu-west-1/terraform.tfstate"
+    region         = "eu-west-1"
+    dynamodb_table = "state_dynamo_db"
+    encrypt        = true

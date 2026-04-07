@@ -8,6 +8,5 @@ resource "aws_subnet" "this" {
 
   tags = merge(var.tags, {
     Name = each.key
-    Type = each.value.type
   })
 }

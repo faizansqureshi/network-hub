@@ -25,8 +25,7 @@ EOF
   type = map(object({
     cidr_block              = string
     availability_zone       = string
-    type                    = string
-    map_public_ip_on_launch = bool
+    map_public_ip_on_launch = optional(bool, false)
   }))
 }
 
