@@ -17,8 +17,55 @@ module "subnets" {
   vpc_id = module.vpc.vpc_id
 
   subnets = var.subnets
-  
+
   tags = var.tags
+} # multiple Subnets for each AZ and type
+
+module "internet-gateway" {
+  source = "../services/internet-gateway"
+
+  vpc_id = module.vpc.vpc_id
+  name   = "internet-gateway"
+  tags   = var.tags
+} #ig deploy on VPC 
+
+module "nat-gateway" {
+  for_each = var.nat_gateway_subnets # Create a single NAT gateway for simplicity
+  source   = "../services/nat-gateway"
+
+  create    = true
+  subnet_id = module.subnets.ids[each.key] # Place NAT gateway in the first public subnet  
+  tags      = var.tags
+
+} # deploy nat gateway for each subnet
+
+module "network-acl" {
+  for_each = module.subnets.subnet_ids_by_segment
+  source   = "../services/network-acl"
+
+  create = true
+  vpc_id = module.vpc.vpc_id
+  name   = "${each.key}-nacl"
+
+  nacl_associations = {
+    for subnet_name, subnet_id in each.value : subnet_name => {
+      subnet_id = subnet_id
+    }
+  } # associate all subnets in the segment with the segment NACL
 }
 
 
+module "route-tables" {
+  for_each = module.subnets.subnet_ids_by_segment
+  source   = "../services/route-tables"
+
+  create = true
+  vpc_id = module.vpc.vpc_id
+  name   = "${each.key}-rt"
+
+  route_table_associations = {
+    for subnet_name, subnet_id in each.value : subnet_name => {
+      subnet_id = subnet_id
+    }
+  }
+}
