@@ -7,6 +7,8 @@ resource "aws_subnet" "this" {
   map_public_ip_on_launch = each.value.map_public_ip_on_launch
 
   tags = merge(var.tags, {
-    Name = each.key
+    Name     = each.key
+    Segment  = lower(try(each.value.segment, split("-", each.key)[0]))
+    segtment = lower(try(each.value.segment, split("-", each.key)[0]))
   })
 }

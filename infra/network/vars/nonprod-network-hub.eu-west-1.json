@@ -10,51 +10,63 @@
     "subnets": {
         "trust-1a": {
             "cidr_block": "10.0.1.0/24",
-            "availability_zone": "eu-west-1a"
+            "availability_zone": "eu-west-1a",
+            "segment": "trust"
         },
         "trust-1b": {
             "cidr_block": "10.0.2.0/24",
-            "availability_zone": "eu-west-1b"
+            "availability_zone": "eu-west-1b",
+            "segment": "trust"
         },
         "trust-1c": {
             "cidr_block": "10.0.3.0/24",
-            "availability_zone": "eu-west-1c"
+            "availability_zone": "eu-west-1c",
+            "segment": "trust"
         },
         "mgmt-1a": {
             "cidr_block": "10.0.4.0/24",
-            "availability_zone": "eu-west-1a"
+            "availability_zone": "eu-west-1a",
+            "segment": "mgmt"
         },
         "mgmt-1b": {
             "cidr_block": "10.0.5.0/24",
-            "availability_zone": "eu-west-1b"
+            "availability_zone": "eu-west-1b",
+            "segment": "mgmt"
         },
         "mgmt-1c": {
             "cidr_block": "10.0.6.0/24",
-            "availability_zone": "eu-west-1c"
+            "availability_zone": "eu-west-1c",
+            "segment": "mgmt"
         },
         "tgw-1a": {
             "cidr_block": "10.0.7.0/24",
-            "availability_zone": "eu-west-1a"
+            "availability_zone": "eu-west-1a",
+            "segment": "tgw"
         },
         "tgw-1b": {
             "cidr_block": "10.0.8.0/24",
-            "availability_zone": "eu-west-1b"
+            "availability_zone": "eu-west-1b",
+            "segment": "tgw"
         },
         "tgw-1c": {
             "cidr_block": "10.0.9.0/24",
-            "availability_zone": "eu-west-1c"
+            "availability_zone": "eu-west-1c",
+            "segment": "tgw"
         },
         "gwlep-1a": {
             "cidr_block": "10.0.10.0/24",
-            "availability_zone": "eu-west-1a"
+            "availability_zone": "eu-west-1a",
+            "segment": "gwlep"
         },
         "gwlep-1b": {
             "cidr_block": "10.0.11.0/24",
-            "availability_zone": "eu-west-1b"
+            "availability_zone": "eu-west-1b",
+            "segment": "gwlep"
         },
         "gwlep-1c": {
             "cidr_block": "10.0.12.0/24",
-            "availability_zone": "eu-west-1c"
+            "availability_zone": "eu-west-1c",
+            "segment": "gwlep"
         }
     },
     "create_subnets": true,
@@ -62,5 +74,10 @@
         "Environment": "nonprod",
         "Project": "network-hub",
         "ManagedBy": "terraform"
+    },
+    "nat_gateway_subnets": {
+        "mgmt-1a": "mgmt-1a",
+        "mgmt-1b": "mgmt-1b",
+        "mgmt-1c": "mgmt-1c"
     }
-}
+}  

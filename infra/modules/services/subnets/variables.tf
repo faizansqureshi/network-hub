@@ -19,12 +19,13 @@ Map of subnets where each key is the subnet name.
 Each subnet object must include:
 - cidr_block: subnet CIDR block
 - availability_zone: the AZ to create the subnet in
-- type: one of "public", "private", "isolated"
+- segment: logical segment name (e.g. mgmt, trust, tgw, gwlep)
 - map_public_ip_on_launch: whether to map public IPs on launch
 EOF
   type = map(object({
     cidr_block              = string
     availability_zone       = string
+    segment                 = optional(string)
     map_public_ip_on_launch = optional(bool, false)
   }))
 }

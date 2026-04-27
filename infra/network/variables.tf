@@ -25,12 +25,13 @@ variable "availability_zones" {
 
 variable "subnets" {
   description = "Map of subnet configurations."
-  type        = map(object({
-    cidr_block              = string
-    availability_zone       = string
+  type = map(object({
+    cidr_block        = string
+    availability_zone = string
+    segment           = optional(string)
 
   }))
-}   
+}
 
 variable "tags" {
   description = "Tags to apply to all resources."

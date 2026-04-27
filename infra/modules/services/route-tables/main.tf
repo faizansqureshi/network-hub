@@ -1,16 +1,14 @@
 resource "aws_route_table" "this" {
-  for_each = var.create ? var.route_tables : {}
+  count = var.create ? 1 : 0
 
   vpc_id = var.vpc_id
-  tags   = merge(var.tags, { Name = each.value.name })
+  tags   = merge(var.tags, { Name = var.name })
 }
 
 resource "aws_route" "this" {
-  for_each = {
-    for rt_key, route in var.create ? var.routes : {} : rt_key => route
-  }
+  for_each = var.create ? var.routes : {}
 
-  route_table_id              = aws_route_table.this[each.value.route_table_key].id
+  route_table_id              = aws_route_table.this[0].id
   destination_cidr_block      = try(each.value.destination_cidr_block, null)
   destination_ipv6_cidr_block = try(each.value.destination_ipv6_cidr_block, null)
   gateway_id                  = try(each.value.gateway_id, null)
@@ -24,5 +22,5 @@ resource "aws_route_table_association" "this" {
   for_each = var.create ? var.route_table_associations : {}
 
   subnet_id      = each.value.subnet_id
-  route_table_id = aws_route_table.this[each.value.route_table_key].id
+  route_table_id = aws_route_table.this[0].id
 }

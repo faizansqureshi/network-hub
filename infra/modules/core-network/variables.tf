@@ -13,9 +13,10 @@ variable "vpc_cidr" {
 }
 variable "subnets" {
   description = "Map of subnet configurations."
-  type        = map(object({
-    cidr_block              = string
-    availability_zone       = string
+  type = map(object({
+    cidr_block        = string
+    availability_zone = string
+    segment           = optional(string)
   }))
 }
 variable "availability_zones" {
@@ -27,6 +28,11 @@ variable "availability_zones" {
   }
 }
 
+variable "nat_gateway_subnets" {
+  description = "Map of subnet IDs for NAT gateway placement. Each key is the AZ name, and the value is the subnet ID."
+  type        = map(string)
+  default     = {}
+}
 
 
 variable "tags" {

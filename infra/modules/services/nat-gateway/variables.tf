@@ -8,16 +8,10 @@ variable "create" {
   default     = true
 }
 
-variable "nat_gateways" {
-  description = <<EOF
-Map of NAT gateways to create.
-Each key is the NAT gateway name, and the value includes:
-- subnet_id: ID of the public subnet where the NAT gateway will be placed
-EOF
-  type = map(object({
-    subnet_id = string
-  }))
-  default = {}
+
+variable "subnet_id" {
+  description = "ID of the subnet where the NAT gateway will be placed."
+  type        = string
 }
 
 variable "tags" {

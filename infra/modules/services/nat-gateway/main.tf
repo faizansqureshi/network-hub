@@ -1,15 +1,13 @@
 resource "aws_eip" "nat" {
-  for_each = var.create ? var.nat_gateways : {}
-
+  count = var.create ? 1:0  
   domain = "vpc"
-  tags   = merge(var.tags, { Name = "${each.key}-eip" })
+  tags   = merge(var.tags, { Name = "nat-eip" })
 }
 
 resource "aws_nat_gateway" "this" {
-  for_each = var.create ? var.nat_gateways : {}
+  count = var.create ? 1:0  
+  subnet_id     = var.subnet_id
+  allocation_id = aws_eip.nat[0].id
 
-  subnet_id     = each.value.subnet_id
-  allocation_id = aws_eip.nat[each.key].id
-
-  tags = merge(var.tags, { Name = each.key })
+  tags = merge(var.tags, { Name = "nat-gateway" })
 }

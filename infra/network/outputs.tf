@@ -8,3 +8,7 @@ output "subnet_ids" {
   value       = module.core_network.subnet_ids
 }
 
+output "subnet_ids_by_segment" {
+  description = "Map of segment -> map of subnet names to IDs."
+  value       = module.core_network.subnet_ids_by_segment
+}
