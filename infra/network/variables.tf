@@ -33,6 +33,12 @@ variable "subnets" {
   }))
 }
 
+variable "nat_gateway_subnets" {
+  description = "Map of subnet keys to place NAT gateways in."
+  type        = map(string)
+  default     = {}
+}
+
 variable "tags" {
   description = "Tags to apply to all resources."
   type        = map(string)

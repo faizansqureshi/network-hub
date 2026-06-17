@@ -34,7 +34,7 @@ module "nat-gateway" {
   source   = "../services/nat-gateway"
 
   create    = true
-  subnet_id = module.subnets.ids[each.key] # Place NAT gateway in the first public subnet  
+  subnet_id = module.subnets.ids[each.value] # Place NAT gateway in the configured subnet (e.g., mgmt)
   tags      = var.tags
 
 } # deploy nat gateway for each subnet
@@ -69,3 +69,7 @@ module "route-tables" {
     }
   }
 }
+
+
+#after create route tables
+
